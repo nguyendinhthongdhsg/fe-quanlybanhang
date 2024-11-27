@@ -1,18 +1,25 @@
 import { Form, Button, Input, Select } from "antd";
 import "./Them.css";
 import formatQuyen from "../../../../utils/formatQuyen";
-import { them } from "../../../../services/TaiKhoanAPI";
+import { them, checkDataFields } from "../../../../services/TaiKhoanAPI";
 import { NotifyError, NotifySuccess } from "../../../components/Toast";
 
 const { Option } = Select;
 
 function Them(props) {
-  const [form ] = Form.useForm();
+  const [form] = Form.useForm();
 
   const themTaiKhoan = async (values) => {
     const data = await them(values);
     if (data.error) {
       NotifyError(data.error);
+    } else if (data.inputInvalid) {
+      form.setFields([
+        {
+          name: data.inputInvalid,
+          errors: [data.messageInvalid],
+        },
+      ]);
     } else {
       NotifySuccess("Thêm tài khoản thành công");
       const newDs = [...props.dsTaiKhoan]

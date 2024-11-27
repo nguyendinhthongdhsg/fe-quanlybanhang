@@ -5,18 +5,25 @@ import { NotifyError, NotifySuccess } from "../../../components/Toast";
 
 
 function Sua(props) {
-  const [form ] = Form.useForm();
+  const [form] = Form.useForm();
 
   const SuaLoaiSanPham = async (values) => {
     values.id = props.loaiSanPham.id
     const data = await sua(values);
     if (data.error) {
       NotifyError(data.error);
+    } else if (data.inputInvalid) {
+      form.setFields([
+        {
+          name: data.inputInvalid,
+          errors: [data.messageInvalid],
+        },
+      ]);
     } else {
       NotifySuccess("Sửa loại sản phẩm thành công");
       const newDs = [...props.dsLoaiSanPham]
-      newDs[props.index].ten = values.ten; 
-      newDs[props.index].mota = values.mota; 
+      newDs[props.index].ten = values.ten;
+      newDs[props.index].mota = values.mota;
       props.setDsLoaiSanPham(newDs)
       props.setChucNang('')
     }

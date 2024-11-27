@@ -7,20 +7,27 @@ import TextArea from "antd/es/input/TextArea";
 const { Option } = Select;
 
 function Sua(props) {
-  const [form ] = Form.useForm();
+  const [form] = Form.useForm();
 
   const SuaSanPham = async (values) => {
     values.id = props.sanPham.id
     const data = await sua(values);
     if (data.error) {
       NotifyError(data.error);
+    } else if (data.inputInvalid) {
+      form.setFields([
+        {
+          name: data.inputInvalid,
+          errors: [data.messageInvalid],
+        },
+      ]);
     } else {
       NotifySuccess("Sửa tài khoản thành công");
       const newDs = [...props.dsSanPham]
-      newDs[props.index].idloaisanpham = values.idloaisanpham; 
-      newDs[props.index].ten = values.ten; 
-      newDs[props.index].dongia = values.dongia; 
-      newDs[props.index].mota = values.mota; 
+      newDs[props.index].idloaisanpham = values.idloaisanpham;
+      newDs[props.index].ten = values.ten;
+      newDs[props.index].dongia = values.dongia;
+      newDs[props.index].mota = values.mota;
       props.setDsSanPham(newDs)
       props.setChucNang('')
     }
@@ -35,7 +42,7 @@ function Sua(props) {
       }}
     >
       <div className="Sua_content">
-      <Form
+        <Form
           onFinish={(values) => {
             SuaSanPham(values);
           }}

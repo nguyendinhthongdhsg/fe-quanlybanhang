@@ -13,6 +13,13 @@ function Them(props) {
     const data = await them(values);
     if (data.error) {
       NotifyError(data.error);
+    } else if (data.inputInvalid) {
+      form.setFields([
+        {
+          name: data.inputInvalid,
+          errors: [data.messageInvalid],
+        },
+      ]);
     } else {
       NotifySuccess("Thêm sản phẩm thành công");
       const newDs = [...props.dsSanPham];

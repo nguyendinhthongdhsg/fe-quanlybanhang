@@ -7,20 +7,27 @@ import { NotifyError, NotifySuccess } from "../../../components/Toast";
 const { Option } = Select;
 
 function Sua(props) {
-  const [form ] = Form.useForm();
+  const [form] = Form.useForm();
 
   const SuaTaiKhoan = async (values) => {
     values.id = props.taiKhoan.id
     const data = await sua(values);
     if (data.error) {
       NotifyError(data.error);
+    } else if (data.inputInvalid) {
+      form.setFields([
+        {
+          name: data.inputInvalid,
+          errors: [data.messageInvalid],
+        },
+      ]);
     } else {
       NotifySuccess("Sửa tài khoản thành công");
       const newDs = [...props.dsTaiKhoan]
-      newDs[props.index].tennguoidung = values.tennguoidung; 
-      newDs[props.index].email = values.email; 
-      newDs[props.index].sodienthoai = values.sodienthoai; 
-      newDs[props.index].idquyen = values.idquyen; 
+      newDs[props.index].tennguoidung = values.tennguoidung;
+      newDs[props.index].email = values.email;
+      newDs[props.index].sodienthoai = values.sodienthoai;
+      newDs[props.index].idquyen = values.idquyen;
       props.setDsTaiKhoan(newDs)
       props.setChucNang('')
     }

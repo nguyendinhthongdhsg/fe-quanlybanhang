@@ -4,12 +4,19 @@ import { them } from "../../../../services/LoaiSanPhamAPI";
 import { NotifyError, NotifySuccess } from "../../../components/Toast";
 
 function Them(props) {
-  const [form ] = Form.useForm();
+  const [form] = Form.useForm();
 
   const themLoaiSanPham = async (values) => {
     const data = await them(values);
     if (data.error) {
       NotifyError(data.error);
+    } else if (data.inputInvalid) {
+      form.setFields([
+        {
+          name: data.inputInvalid,
+          errors: [data.messageInvalid],
+        },
+      ]);
     } else {
       NotifySuccess("Thêm loại sản phẩm thành công");
       const newDs = [...props.dsLoaiSanPham]
